@@ -131,29 +131,30 @@ export default function ProductPage({ userName, onLogout }) {
             <p>No products found.</p>
           ) : (
             filteredProducts.map(product => (
-                <Link to={`/product/${product.id}`} className="product-card" key={product.id}>
-                <img src={product.image} alt={product.title} className="product-image" />
-                <h3 className="product-title">{product.title}</h3>
-                <p className="product-price">${product.price}</p>
-
-                {/* Add to Cart field */}
+              <div key={product.id} className="product-card">
+                <Link to={`/product/${product.id}`} className="product-link">
+                  <img src={product.image} alt={product.title} className="product-image" />
+                  <h3 className="product-title">{product.title}</h3>
+                  <p className="product-price">${product.price}</p>
+                </Link>
+              
                 <div className="add-to-cart">
                   <button onClick={() => addToCart(product)}>Add to Cart</button>
                   <input
-                      type="number"
-                      min="1"
-                      max="50"
-                      value={quantities[product.id] || 1}
-                      onChange={(e) => {
-                        let val = parseInt(e.target.value, 10);
-                        if (isNaN(val) || val < 1) val = 1;
-                        if (val > 50) val = 50;
-                        setQuantities(prev => ({ ...prev, [product.id]: val }));
-                      }}
-                      className="quantity-input"
+                    type="number"
+                    min="1"
+                    max="50"
+                    value={quantities[product.id] || 1}
+                    onChange={(e) => {
+                      let val = parseInt(e.target.value, 10);
+                      if (isNaN(val) || val < 1) val = 1;
+                      if (val > 50) val = 50;
+                      setQuantities(prev => ({ ...prev, [product.id]: val }));
+                    }}
+                    className="quantity-input"
                   />
                 </div>
-              </Link>
+              </div>
             ))
           )}
         </main>
