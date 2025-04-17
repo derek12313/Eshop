@@ -89,11 +89,11 @@ export default function ProductPage({ userName, onLogout }) {
             <p>No products found.</p>
           ) : (
             filteredProducts.map(product => (
-              <div key={product.id} className="product-card">
+              <Link to={`/product/${product.id}`} className="product-card" key={product.id}>
                 <img src={product.image} alt={product.title} className="product-image" />
                 <h3 className="product-title">{product.title}</h3>
                 <p className="product-price">${product.price}</p>
-              </div>
+              </Link>
             ))
           )}
         </main>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './components/AuthPage/AuthPage.jsx';
 import ProductPage from './components/ProductPage/ProductPage.jsx';
+import ProductInfoPage from './components/ProductInfoPage/ProductInfoPage.jsx';
 
 function App() {
   const [userName, setUserName] = useState(null); 
@@ -32,6 +33,16 @@ function App() {
         element={
           userName ? (
             <ProductPage userName={userName} onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/product/:productId"
+        element={
+          userName ? (
+            <ProductInfoPage userName={userName} onLogout={handleLogout} />
           ) : (
             <Navigate to="/login" replace />
           )
