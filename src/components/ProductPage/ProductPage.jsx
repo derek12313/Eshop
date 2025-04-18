@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './ProductPage.css';
 
-export default function ProductPage({ userName, onLogout }) {
+export default function ProductPage({ userName, onLogout, cart, addToCart }) {
   const [products, setProducts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
-  const [cart, setCart] = useState([]); 
   const [quantities, setQuantities] = useState({});
   const navigate = useNavigate();
 
@@ -29,34 +28,10 @@ export default function ProductPage({ userName, onLogout }) {
     }
   }, [products]);
 
-  const addToCart = (product) => {
+  const handleAddToCart = (product) => {
     const quantityToAdd = quantities[product.id] || 1;
-    setCart(prevCart => {
-      const existing = prevCart.find(item => item.id === product.id);
-      if (existing) {
-        const newQuantity = Math.min(existing.quantity + quantityToAdd, 50);
-        return prevCart.map(item =>
-          item.id === product.id ? { ...item, quantity: newQuantity } : item
-        );
-      } else {
-        return [...prevCart, { ...product, quantity: Math.min(quantityToAdd, 50) }];
-      }
-    });
-    // printCart won't print the last product added to the cart for some reason
-    printCart();
+    addToCart(product, quantityToAdd);
   };
-  
-  const printCart = () => {
-    console.log('Cart Contents:');
-    if (cart.length === 0) {
-      console.log('The cart is empty.');
-      return;
-    }
-    cart.forEach(item => {
-      console.log(`- ${item.title} (ID: ${item.id}): Quantity = ${item.quantity}, Price per item = $${item.price}`);
-    });
-  };
-  
 
   const categories = Array.from(new Set(products.map(p => p.category)));
 
@@ -139,7 +114,8 @@ export default function ProductPage({ userName, onLogout }) {
                 </Link>
               
                 <div className="add-to-cart">
-                  <button onClick={() => addToCart(product)}>Add to Cart</button>
+                  {/* TODO: notify the user the item has been added successfully */}
+                  <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
                   <input
                     type="number"
                     min="1"
