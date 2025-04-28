@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import './ProductInfoPage.css';
 
-export default function ProductInfoPage({ userName, onLogout }) {
-  const { productId } = useParams(); 
+export default function ProductInfoPage({ userName, onLogout, addToCart }) {
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(`[ProductInfoPage]: fetching product with id ${productId}`);
     fetch(`https://fakestoreapi.com/products/${productId}`)
       .then(res => {
         if (!res.ok) throw new Error('Product not found');
@@ -16,7 +16,6 @@ export default function ProductInfoPage({ userName, onLogout }) {
       })
       .then(data => setProduct(data))
       .catch(() => {
-        console.log(`[ProductInfoPage]: product with id ${productId} not found`);
         navigate('/', { replace: true });
       });
   }, [productId, navigate]);
@@ -26,11 +25,14 @@ export default function ProductInfoPage({ userName, onLogout }) {
     navigate('/login', { replace: true });
   };
 
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
+  };
+
   if (!product) return <div>Loading product info...</div>;
 
   return (
     <div className="product-info-page">
-      {/* Maybe we should use outlet instead of copying the header but I'm too lazy to do it */}
       <header className="header">
         <div className="greeting">Hello, {userName}</div>
         <div className="header-right">
@@ -50,7 +52,26 @@ export default function ProductInfoPage({ userName, onLogout }) {
           <p className="product-category"><strong>Category:</strong> {product.category}</p>
           <p className="product-price"><strong>Price:</strong> ${product.price.toFixed(2)}</p>
           <p className="product-description">{product.description}</p>
-          <Link to="/" className="back-link">go back to products</Link>
+
+          {/* Quantity input and Add to Cart button */}
+          <div className="add-to-cart">
+            <input
+              type="number"
+              min="1"
+              max="50"
+              value={quantity}
+              onChange={e => {
+                let val = parseInt(e.target.value, 10);
+                if (isNaN(val) || val < 1) val = 1;
+                if (val > 50) val = 50;
+                setQuantity(val);
+              }}
+              className="quantity-input"
+            />
+            <button onClick={handleAddToCart}>Add to Cart</button>
+          </div>
+
+          <Link to="/" className="back-link">← Back to Products</Link>
         </div>
       </main>
     </div>

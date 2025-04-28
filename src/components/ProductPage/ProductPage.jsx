@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './ProductPage.css';
 
-export default function ProductPage({ userName, onLogout, cart, addToCart }) {
+export default function ProductPage({ userName, onLogout, addToCart }) {
   const [products, setProducts] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
