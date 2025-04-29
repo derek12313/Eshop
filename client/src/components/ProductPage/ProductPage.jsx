@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './ProductPage.css';
+import axios from 'axios'
 
 export default function ProductPage({ userName, onLogout, addToCart }) {
   const [products, setProducts] = useState([]);
@@ -27,6 +28,17 @@ export default function ProductPage({ userName, onLogout, addToCart }) {
       setQuantities(initialQuantities);
     }
   }, [products]);
+
+  useEffect(() => {
+    getGreeting(userName);
+  }, [userName]);
+  
+  const getGreeting = (userName) => {
+    console.log("getting hello world")
+    axios.get('http://localhost:8080/greeting').then((data) => {
+      console.log(data.data + userName);
+    });
+  };
 
   const handleAddToCart = (product) => {
     const quantityToAdd = quantities[product.id] || 1;

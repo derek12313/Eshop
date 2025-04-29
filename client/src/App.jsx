@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './components/AuthPage/AuthPage.jsx';
 import ProductPage from './components/ProductPage/ProductPage.jsx';
