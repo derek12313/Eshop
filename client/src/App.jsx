@@ -3,9 +3,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './components/AuthPage/AuthPage.jsx';
 import ProductPage from './components/ProductPage/ProductPage.jsx';
 import ProductInfoPage from './components/ProductInfoPage/ProductInfoPage.jsx';
+import AdminPage from './components/AdminPage/AdminPage.jsx'
 
 function App() {
   const [userName, setUserName] = useState(null); 
+  const [isAdmin, setIsAdmin] = useState(null);
   const [cart, setCart] = useState([]); 
 
   const addToCart = (product, quantity = 1) => {
@@ -37,11 +39,16 @@ function App() {
 
   const handleLogin = (username) => {
     console.log(`[App.jsx]: user ${userName} logging in`);
+    if(username == "admin") {
+      console.log("admin login");
+      setIsAdmin(true);
+    }
     setUserName(username);
   };
 
   const handleLogout = () => {
     setUserName(null);
+    setIsAdmin(null);
   };
 
   return (
@@ -51,16 +58,28 @@ function App() {
         element={
           !userName ? (
             <AuthPage onLogin={handleLogin} />
-          ) : (
-            <Navigate to="/" replace />
+          ) : isAdmin ? (
+            <Navigate to="/adminPage" replace />
+          ) :(
+            <Navigate to="/productPage" replace />
           )
         }
       />
       <Route
-        path="/"
+        path="/productPage"
         element={
           userName ? (
             <ProductPage userName={userName} onLogout={handleLogout} cart={cart} addToCart={addToCart}/>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/adminPage"
+        element={
+          isAdmin ? (
+            <AdminPage userName={userName} onLogout={handleLogout}/>
           ) : (
             <Navigate to="/login" replace />
           )
@@ -76,7 +95,7 @@ function App() {
           )
         }
       />
-      <Route path="*" element={<Navigate to={userName ? "/" : "/login"} replace />} />
+      <Route path="*" element={<Navigate to={userName ? "/productPage" : "/login"} replace />} />
     </Routes>
   );
 }

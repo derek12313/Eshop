@@ -15,9 +15,7 @@ export default function ProductInfoPage({ userName, onLogout, addToCart }) {
         return res.json();
       })
       .then(data => setProduct(data))
-      .catch(() => {
-        navigate('/', { replace: true });
-      });
+      .catch(console.error);
   }, [productId, navigate]);
 
   const handleLogout = () => {

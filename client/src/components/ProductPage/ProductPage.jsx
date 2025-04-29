@@ -14,7 +14,10 @@ export default function ProductPage({ userName, onLogout, addToCart }) {
   useEffect(() => {
     console.log("fetching product...");
     fetch('https://fakestoreapi.com/products')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Product not found');
+        return res.json();
+      })
       .then(data => setProducts(data))
       .catch(console.error);
   }, []);
@@ -73,6 +76,7 @@ export default function ProductPage({ userName, onLogout, addToCart }) {
     return categoryMatch && searchMatch;
   });
 
+  if (!products) return <div>Loading product info...</div>;
   
   return (
     <div className="product-page">
